@@ -73,6 +73,17 @@ public enum MagGain : UInt8 {
         case GAIN_8_1                    = 0xE0 // +/- 8.1
 }
 
+public enum MagRate : UInt8 {
+    case LSM303_MAGRATE_0_7                        = 0x00,  // 0.75 Hz
+    case LSM303_MAGRATE_1_5                        = 0x01,  // 1.5 Hz
+    case LSM303_MAGRATE_3_0                        = 0x62,  // 3.0 Hz
+    case LSM303_MAGRATE_7_5                        = 0x03,  // 7.5 Hz
+    case LSM303_MAGRATE_15                         = 0x04,  // 15 Hz
+    case LSM303_MAGRATE_30                         = 0x05,  // 30 Hz
+    case LSM303_MAGRATE_75                         = 0x06,  // 75 Hz
+    case LSM303_MAGRATE_220                        = 0x07   // 200 Hz
+}
+
 public struct AccelData {
         public var x, y, z : Float
 }
@@ -87,6 +98,7 @@ public class LSM303 {
         public var mag   : MagData   = MagData(x: 0, y: 0, z: 0)
         var magGain : MagGain = MagGain.GAIN_1_3
         var accScale : AccelScale = AccelScale.G2
+        var magRate : MagRate = MagRate.LSM303_MAGRATE_0_7
 
         public convenience init() {self.init(for:.RaspberryPi3)}
         public init(for board: SupportedBoard) {
@@ -155,4 +167,10 @@ public class LSM303 {
                 self.accScale = scale
                 i2c.writeByte(LSM303_ADDRESS_ACCEL, command: AccelRegisters.CTRL_REG4_A.rawValue, value: scale.rawValue)
         }
+    
+    public func setMagRate(rate: MagRate) {
+        self.magRate = rate
+        i2c.writeByte(LSM303_ADDRESS_MAG, command: MagRegisters.CRA_REG_M.rawValue, value: rate.rawValue)
+        
+    }
 }
