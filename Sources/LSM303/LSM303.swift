@@ -170,7 +170,7 @@ public class LSM303 {
     
     public func setMagRate(rate: MagRate) {
         self.magRate = rate
-        let value = (rate & 0x07) << 2
+        let value = (rate.rawValue & 0x07) << 2
         i2c.writeByte(LSM303_ADDRESS_MAG, command: MagRegisters.CRA_REG_M.rawValue, value: value)
         
     }
