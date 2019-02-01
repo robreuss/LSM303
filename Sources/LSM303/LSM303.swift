@@ -153,9 +153,14 @@ public class LSM303 {
                         case .GAIN_5_6 : mxy =  330.0; mz = 295.0
                         case .GAIN_8_1 : mxy =  230.0; mz = 105.0
 		}
-		mag.x = Float((Int16(axhi) << 8) | Int16(axlo)) / mxy
+            /*
+                mag.x = Float((Int16(axhi) << 8) | Int16(axlo)) / mxy
                 mag.y = Float((Int16(ayhi) << 8) | Int16(aylo)) / mxy
                 mag.z = Float((Int16(azhi) << 8) | Int16(azlo)) / mz
+ */
+            mag.x = Float((Int16(axhi) << 8) | Int16(axlo))
+            mag.y = Float((Int16(ayhi) << 8) | Int16(aylo))
+            mag.z = Float((Int16(azhi) << 8) | Int16(azlo)) 
         }
 
         public func setMagGain(gain: MagGain) {
@@ -168,10 +173,10 @@ public class LSM303 {
                 i2c.writeByte(LSM303_ADDRESS_ACCEL, command: AccelRegisters.CTRL_REG4_A.rawValue, value: scale.rawValue)
         }
     
-    public func setMagRate(rate: MagRate) {
-        self.magRate = rate
-        let value = (rate.rawValue & 0x07) << 2
-        i2c.writeByte(LSM303_ADDRESS_MAG, command: MagRegisters.CRA_REG_M.rawValue, value: value)
-        
-    }
+        public func setMagRate(rate: MagRate) {
+            self.magRate = rate
+            let value = (rate.rawValue & 0x07) << 2
+            i2c.writeByte(LSM303_ADDRESS_MAG, command: MagRegisters.CRA_REG_M.rawValue, value: value)
+            
+        }
 }
